@@ -14,7 +14,7 @@ server.use(bodyParser.json());
 
 server.post('/get-movie-details', (req, res) => {
     res.json({req.body.result.parameters.movie});
-    res.send("berhasil");
+    
 
     const movieToSearch = req.body.result && req.body.result.parameters && req.body.result.parameters.movie;
     const reqUrl = encodeURI(`http://www.omdbapi.com/?t=${movieToSearch}&apikey=${API_KEY}`);
