@@ -3,7 +3,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
-const API_KEY = require('./apiKey');
 
 const server = express();
 server.use(bodyParser.urlencoded({
@@ -12,24 +11,27 @@ server.use(bodyParser.urlencoded({
 
 server.use(bodyParser.json());
 
-server.post('/get-movie-details', (req, res) => {
-    
-    const movieToSearch = req.body.result && req.body.result.parameters && req.body.result.parameters.movie ? req.body.result.parameters.movie : 'The Wolf of Wall Street';
-    const reqUrl = encodeURI(`http://www.omdbapi.com/?apikey=${API_KEY}&t=${movieToSearch}`);
+server.post('/get-movie-details', function (req, res) {
+
+    let movieToSearch = req.body.result && req.body.result.parameters && req.body.result.parameters.movie ? req.body.result.parameters.movie : 'The Godfather';
+    let reqUrl = encodeURI('http://www.omdbapi.com/?apikey=8863ef22&t=' + movieToSearch);
     http.get(reqUrl, (responseFromAPI) => {
-        let completeResponse = '';
-        responseFromAPI.on('data', (chunk) => {
-            completeResponse += chunk;
-        });
+
+    	let body = "";
+    	responseFromAPI.on("data", data => {
+    	    body += data;
+    	});
         responseFromAPI.on('end', () => {
-            const movie = JSON.parse(completeResponse);
-            let dataToSend = `${movie.Title} adalah ${movie.Actors} starer ${movie.Genre} movie, released in ${movie.Year}. It was directed by ${movie.Director}`;
+            let movie = JSON.parse(body);
+            let dataToSend = movieToSearch === 'The Godfather' ? 'I don\'t have the required info on that. Here\'s some info on \'The Godfather\' instead.\n' : '';
+            dataToSend += movie.Title + ' is an ' +movie.Genre + ' movie, released in ' + movie.Year + '. It was directed by ' + movie.Director;
 
             return res.json({
                 speech: dataToSend,
-                displayText: movieToSearch,
+                displayText: dataToSend,
                 source: 'get-movie-details'
             });
+
         });
     }, (error) => {
         return res.json({
@@ -40,6 +42,6 @@ server.post('/get-movie-details', (req, res) => {
     });
 });
 
-server.listen((process.env.PORT || 8000), () => {
+server.listen((process.env.PORT || 8081), function () {
     console.log("Server is up and running...");
 });
