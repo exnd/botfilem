@@ -23,8 +23,7 @@ server.post('/get-movie-details', (req, res) => {
         });
         responseFromAPI.on('end', () => {
             const movie = JSON.parse(completeResponse);
-            let dataToSend = movie;
-            dataToSend += `${movie.Title} adalah ${movie.Actors} starer ${movie.Genre} movie, released in ${movie.Year}. It was directed by ${movie.Director}`;
+            let dataToSend = `${movie.Title} adalah ${movie.Actors} starer ${movie.Genre} movie, released in ${movie.Year}. It was directed by ${movie.Director}`;
 
             return res.json({
                 speech: dataToSend,
