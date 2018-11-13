@@ -19,7 +19,6 @@ server.post('/get-movie-details', function (req, res) {
 
     	let body = "";
         let coba = "{
-  "line": {
     "type": "flex",
     "altText": "Flex Message",
     "contents": {
@@ -173,8 +172,7 @@ server.post('/get-movie-details', function (req, res) {
         ]
       }
     }
-  }
-}";
+  }";
                   
     	responseFromAPI.on("data", data => {
     	    body += data;
